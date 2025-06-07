@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Basic Calculator</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .calculator {
+      width: 320px;
+      background: #000;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #222;
+      position: relative;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+    /* History top-right */
+    .history {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 0.9rem;
+      color: #888;
+      max-width: 120px;
+      text-align: right;
+      user-select: none;
+      pointer-events: none;
+    }
+    .display {
+      background: #111;
+      font-size: 2.5rem;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: right;
+      margin-bottom: 20px;
+      min-height: 50px;
+      overflow-x: auto;
+      user-select: none;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    button {
+      padding: 18px 0;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      background-color: #333;
+      transition: background-color 0.3s ease;
+    }
+    button.gray {
+      background-color: #555;
+    }
+    button.orange {
+      background-color: #f90;
+      color: #000;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #777;
+    }
+    button.orange:hover {
+      background-color: #fa0;
+    }
+    /* Total/result at the bottom */
+    .total {
+      margin-top: 20px;
+      font-size: 1.6rem;
+      text-align: right;
+      padding: 10px 20px;
+      background: #111;
+      border-radius: 8px;
+      min-height: 40px;
+      user-select: none;
+      color: #0f0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="history" id="history"></div>
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="gray" onclick="clearDisplay()">AC</button>
+      <button class="gray" onclick="addToDisplay('%')">%</button>
+      <button class="gray" onclick="deleteLast()">⌫</button>
+      <button class="orange" onclick="addToDisplay('/')">÷</button>
+
+      <button onclick="addToDisplay('7')">7</button>
+      <button onclick="addToDisplay('8')">8</button>
+      <button onclick="addToDisplay('9')">9</button>
+      <button class="orange" onclick="addToDisplay('*')">×</button>
+
+      <button onclick="addToDisplay('4')">4</button>
+      <button onclick="addToDisplay('5')">5</button>
+      <button onclick="addToDisplay('6')">6</button>
+      <button class="orange" onclick="addToDisplay('-')">−</button>
+
+      <button onclick="addToDisplay('1')">1</button>
+      <button onclick="addToDisplay('2')">2</button>
+      <button onclick="addToDisplay('3')">3</button>
+      <button class="orange" onclick="addToDisplay('+')">+</button>
+
+      <button onclick="addToDisplay('00')">00</button>
+      <button onclick="addToDisplay('0')">0</button>
+      <button onclick="addToDisplay('.')">.</button>
+      <button class="orange" onclick="calculate()">=</button>
+    </div>
+    <div class="total" id="total"></div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    const history = document.getElementById('history');
+    const total = document.getElementById('total');
+
+    function addToDisplay(value) {
+      if (display.textContent === "0" && value !== ".") {
+        display.textContent = value;
+      } else {
+        display.textContent += value;
+      }
+    }
+
+    function clearDisplay() {
+      display.textContent = "0";
+      total.textContent = "";
+      history.textContent = "";
+    }
+
+    function deleteLast() {
+      if (display.textContent.length > 1) {
+        display.textContent = display.textContent.slice(0, -1);
+      } else {
+        display.textContent = "0";
+      }
+    }
+
+    function calculate() {
+      try {
+        const expression = display.textContent;
+        // Eval can be dangerous, but for simple calculator demo it's okay
+        const result = eval(expression);
+        // Update history top-right: expression =
+        history.textContent = expression + " =";
+        // Update total at bottom
+        total.textContent = result;
+        // Show result in display for next operations
+        display.textContent = result;
+      } catch (error) {
+        total.textContent = "Error";
+      }
+    }
+  </script>
+</body>
+</html>
